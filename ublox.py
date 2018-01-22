@@ -198,7 +198,7 @@ class UBloxDescriptor:
         self.count_field = count_field
         self.format2 = format2
         self.fields2 = fields2
-	
+
     def unpack(self, msg):
 	'''unpack a UBloxMessage, creating the .fields and ._recs attributes in msg'''
         msg._fields = {}
@@ -209,7 +209,7 @@ class UBloxDescriptor:
         count = 0
         msg._recs = []
         fields = self.fields[:]
-        
+
         for fmt in formats:
             size1 = struct.calcsize(fmt)
             if size1 > len(buf):
@@ -274,7 +274,7 @@ class UBloxDescriptor:
                 f1.append(msg._fields[fieldname])
             else:
                 for a in range(alen):
-                    f1.append(msg._fields[fieldname][a])                    
+                    f1.append(msg._fields[fieldname][a])
         try:
             # try full length message
             fmt = self.msg_format.replace(',', '')
@@ -294,7 +294,7 @@ class UBloxDescriptor:
             f2 = []
             for f in self.fields2:
                 f2.append(r[f])
-            msg._buf += struct.pack(self.format2, *tuple(f2))            
+            msg._buf += struct.pack(self.format2, *tuple(f2))
         msg._buf += struct.pack('<BB', *msg.checksum(data=msg._buf[2:]))
 
     def format(self, msg):
@@ -323,15 +323,15 @@ class UBloxDescriptor:
                 ret += '%s=%s, ' % (f, v)
             ret = ret[:-2] + ' ], '
         return ret[:-2]
-        
+
 
 # list of supported message types.
 msg_types = {
     (CLASS_ACK, MSG_ACK_ACK)    : UBloxDescriptor('ACK_ACK',
-                                                  '<BB', 
+                                                  '<BB',
                                                   ['clsID', 'msgID']),
     (CLASS_ACK, MSG_ACK_NACK)   : UBloxDescriptor('ACK_NACK',
-                                                  '<BB', 
+                                                  '<BB',
                                                   ['clsID', 'msgID']),
     (CLASS_CFG, MSG_CFG_USB)    : UBloxDescriptor('CFG_USB',
                                                   '<HHHHHH32s32s32s',
@@ -339,7 +339,7 @@ msg_types = {
                                                    'flags', 'vendorString', 'productString', 'serialNumber']),
     (CLASS_CFG, MSG_CFG_PRT)    : UBloxDescriptor('CFG_PRT',
                                                   '<BBHIIHHHH',
-                                                  ['portID', 'reserved0', 'txReady', 'mode', 'baudRate', 'inProtoMask', 
+                                                  ['portID', 'reserved0', 'txReady', 'mode', 'baudRate', 'inProtoMask',
                                                    'outProtoMask', 'reserved4', 'reserved5']),
     (CLASS_CFG, MSG_CFG_CFG)    : UBloxDescriptor('CFG_CFG',
                                                   '<III,B',
@@ -361,22 +361,22 @@ msg_types = {
                                                   '<BB6B',
                                                   ['msgClass', 'msgId', 'rates[6]']),
     (CLASS_NAV, MSG_NAV_POSLLH) : UBloxDescriptor('NAV_POSLLH',
-                                                  '<IiiiiII', 
+                                                  '<IiiiiII',
                                                   ['iTOW', 'Longitude', 'Latitude', 'height', 'hMSL', 'hAcc', 'vAcc']),
     (CLASS_NAV, MSG_NAV_VELNED) : UBloxDescriptor('NAV_VELNED',
-                                                  '<IiiiIIiII', 
-                                                  ['iTOW', 'velN', 'velE', 'velD', 'speed', 'gSpeed', 'heading', 
+                                                  '<IiiiIIiII',
+                                                  ['iTOW', 'velN', 'velE', 'velD', 'speed', 'gSpeed', 'heading',
                                                    'sAcc', 'cAcc']),
     (CLASS_NAV, MSG_NAV_DOP)    : UBloxDescriptor('NAV_DOP',
-                                                  '<IHHHHHHH', 
+                                                  '<IHHHHHHH',
                                                   ['iTOW', 'gDOP', 'pDOP', 'tDOP', 'vDOP', 'hDOP', 'nDOP', 'eDOP']),
     (CLASS_NAV, MSG_NAV_STATUS) : UBloxDescriptor('NAV_STATUS',
-                                                  '<IBBBBII', 
+                                                  '<IBBBBII',
                                                   ['iTOW', 'gpsFix', 'flags', 'fixStat', 'flags2', 'ttff', 'msss']),
     (CLASS_NAV, MSG_NAV_SOL)    : UBloxDescriptor('NAV_SOL',
                                                   '<IihBBiiiIiiiIHBBI',
                                                   ['iTOW', 'fTOW', 'week', 'gpsFix', 'flags', 'ecefX', 'ecefY', 'ecefZ',
-                                                   'pAcc', 'ecefVX', 'ecefVY', 'ecefVZ', 'sAcc', 'pDOP', 'reserved1', 
+                                                   'pAcc', 'ecefVX', 'ecefVY', 'ecefVZ', 'sAcc', 'pDOP', 'reserved1',
                                                    'numSV', 'reserved2']),
     (CLASS_NAV, MSG_NAV_POSUTM) : UBloxDescriptor('NAV_POSUTM',
                                                   '<Iiiibb',
@@ -451,22 +451,22 @@ msg_types = {
                                                   ['svid', 'week', 'dwrd[8]']),
     (CLASS_CFG, MSG_CFG_NAV5)   : UBloxDescriptor('CFG_NAV5',
                                                   '<HBBiIbBHHHHBBIII',
-                                                  ['mask', 'dynModel', 'fixMode', 'fixedAlt', 'fixedAltVar', 'minElev', 
-                                                   'drLimit', 'pDop', 'tDop', 'pAcc', 'tAcc', 'staticHoldThresh', 
+                                                  ['mask', 'dynModel', 'fixMode', 'fixedAlt', 'fixedAltVar', 'minElev',
+                                                   'drLimit', 'pDop', 'tDop', 'pAcc', 'tAcc', 'staticHoldThresh',
                                                    'dgpsTimeOut', 'reserved2', 'reserved3', 'reserved4']),
     (CLASS_CFG, MSG_CFG_NAVX5)   : UBloxDescriptor('CFG_NAVX5',
                                                   '<HHIBBBBBBBBBBHIBBBBBBHII',
                                                   ['version', 'mask1', 'reserved0', 'reserved1', 'reserved2',
-                                                   'minSVs', 'maxSVs', 'minCNO', 'reserved5', 'iniFix3D', 
+                                                   'minSVs', 'maxSVs', 'minCNO', 'reserved5', 'iniFix3D',
                                                    'reserved6', 'reserved7', 'reserved8', 'wknRollover',
                                                    'reserved9', 'reserved10', 'reserved11',
-                                                   'usePPP', 'useAOP', 'reserved12', 'reserved13', 
+                                                   'usePPP', 'useAOP', 'reserved12', 'reserved13',
                                                    'aopOrbMaxErr', 'reserved3', 'reserved4']),
     (CLASS_MON, MSG_MON_HW)     : UBloxDescriptor('MON_HW',
                                                   '<IIIIHHBBBBIB25BHIII',
                                                   ['pinSel', 'pinBank', 'pinDir', 'pinVal', 'noisePerMS', 'agcCnt', 'aStatus',
-						   'aPower', 'flags', 'reserved1', 'usedMask', 
-						   'VP[25]',                                                  
+						   'aPower', 'flags', 'reserved1', 'usedMask',
+						   'VP[25]',
 						   'jamInd', 'reserved3', 'pinInq',
 						   'pullH', 'pullL']),
     (CLASS_MON, MSG_MON_HW2)    : UBloxDescriptor('MON_HW2',
@@ -488,7 +488,7 @@ msg_types = {
                                                   ['towMS', 'towSubMS', 'qErr', 'week', 'flags', 'reserved1']),
     (CLASS_TIM, MSG_TIM_TM2)    : UBloxDescriptor('TIM_TM2',
                                                   '<BBHHHIIIII',
-                                                  ['ch', 'flags', 'count', 'wnR', 'wnF', 'towMsR', 'towSubMsR', 
+                                                  ['ch', 'flags', 'count', 'wnR', 'wnF', 'towMsR', 'towSubMsR',
                                                    'towMsF', 'towSubMsF', 'accEst']),
     (CLASS_TIM, MSG_TIM_SVIN)   : UBloxDescriptor('TIM_SVIN',
                                                   '<IiiiIIBBH',
@@ -645,8 +645,11 @@ class UBlox:
 
     port can be a file (for reading only) or a serial device
     '''
-    def __init__(self, port, baudrate=115200, timeout=0):
 
+    # possible_baudrates = [4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800]
+
+    def __init__(self, port, baudrate=115200, timeout=0):
+        self.possible_baudrates = (4800, 9600, 19200, 38400, 57600, 115200)
         self.serial_device = port
         self.baudrate = baudrate
         self.use_sendrecv = False
@@ -660,15 +663,35 @@ class UBlox:
             self.dev = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.dev.connect(destination_addr)
             self.dev.setblocking(1)
-            self.dev.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)            
+            self.dev.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
             self.use_sendrecv = True
         elif os.path.isfile(self.serial_device):
             self.read_only = True
             self.dev = open(self.serial_device, mode='rb')
         else:
             import serial
+            if self.baudrate not in self.possible_baudrates:
+                raise ValueError('%u is a wrong baudrate setting. You should choose from: %s.' % (self.baudrate, str(self.possible_baudrates).strip('()') ) )
+
+            # First, we try to connect at the desired baudrate
             self.dev = serial.Serial(self.serial_device, baudrate=self.baudrate,
                                      dsrdtr=False, rtscts=False, xonxoff=False, timeout=timeout)
+            # Check if we should change the baudrate or not
+            if not self.test_uart_connection():
+                self.dev.close()
+                current_uart_baudrate = self.get_uart_baudrate()
+                if current_uart_baudrate == -1:
+                    raise Exception('Couldn\'t get current UART baudrate')
+                else:
+                    print("Connected at %u bps. Tryint go change to %u bps." % (current_uart_baudrate, self.baudrate))
+                    # We connect at the current baudrate and change to the desired baudRate
+                    self.dev = serial.Serial(self.serial_device, baudrate=current_uart_baudrate,
+                                             dsrdtr=False, rtscts=False, xonxoff=False, timeout=timeout)
+                    self.set_uart_baudrate(self.baudrate)
+                    self.dev.close()
+                    self.dev = serial.Serial(self.serial_device, baudrate=self.baudrate,
+                                         dsrdtr=False, rtscts=False, xonxoff=False, timeout=timeout)
+
         self.logfile = None
         self.log = None
         self.preferred_dynamic_model = None
@@ -748,8 +771,50 @@ class UBlox:
 
     def send_nmea(self, msg):
         if not self.read_only:
-            s = msg + "*%02X" % self.nmea_checksum(msg)
+            s = msg + "*%02X" % self.nmea_checksum(msg) + "\r\n"
+            print(s)
             self.write(s)
+
+    def test_uart_connection(self, msg=None, nbytes = 500):
+        if msg is None:
+            msg = self.read(nbytes) # We read some bytes
+        if msg.find('$') != -1 and msg.find(',') !=-1 and msg.find('*') != -1:
+            return True
+        else:
+            return False
+
+    def get_uart_baudrate(self, baudrate=None):
+        '''Get current UART baudrate'''
+        if baudrate is None:
+            possible_baudrates = self.possible_baudrates
+
+        for brt in self.possible_baudrates:
+            print("Trying to conect to %u bps." % brt)
+            import serial
+            test_dev = serial.Serial(self.serial_device, baudrate=brt,
+                                     dsrdtr=False, rtscts=False, xonxoff=False, timeout=2)
+            # dev = ublox.UBlox(opts.port, baudrate=brt, timeout=1)
+            msg = test_dev.read(500) # We read some bytes
+            # print msg
+            if self.test_uart_connection(msg):
+                print("Connected at %u bps." % brt)
+                return brt
+            else:
+                test_dev.close()
+            time.sleep(1.0)
+        return(-1)
+
+    def set_uart_baudrate(self, new_baudrate):
+	'''put a UBlox into binary mode using a NMEA string'''
+        if not self.read_only:
+            print("trying to set UART baudrate from %u to %u" % (self.baudrate, new_baudrate))
+            self.send_nmea("$PUBX,41,0,0007,0003,%u,0" % new_baudrate)
+            self.send_nmea("$PUBX,41,1,0007,0003,%u,0" % new_baudrate)
+            self.send_nmea("$PUBX,41,2,0007,0003,%u,0" % new_baudrate)
+            self.send_nmea("$PUBX,41,3,0007,0003,%u,0" % new_baudrate)
+            self.send_nmea("$PUBX,41,4,0007,0003,%u,0" % new_baudrate)
+            self.send_nmea("$PUBX,41,5,0007,0003,%u,0" % new_baudrate)
+
 
     def set_binary(self):
 	'''put a UBlox into binary mode using a NMEA string'''
@@ -836,7 +901,7 @@ class UBlox:
             self.debug(1, "invalid send")
             return
         if not self.read_only:
-            self.write(msg._buf)        
+            self.write(msg._buf)
 
     def send_message(self, msg_class, msg_id, payload):
 	'''send a ublox message with class, id and payload'''
@@ -889,4 +954,3 @@ class UBlox:
         ''' Reset the module for hot/warm/cold start'''
         payload = struct.pack('<HBB', set, mode, 0)
         self.send_message(CLASS_CFG, MSG_CFG_RST, payload)
-
